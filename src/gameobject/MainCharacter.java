@@ -16,14 +16,16 @@ public class MainCharacter {
 
     // 主角落地的 Y 座標
     public static final int LAND_POSY = 80;
-    // 重力
-    public static final float GRAVITY = 0.1f;
     
     // 不同狀態的常數
     private static final int NORMAL_RUN = 0;
     private static final int JUMPING = 1;
     private static final int DOWN_RUN = 2;
     private static final int DEATH = 3;
+
+    private float gravity;
+    private int brightness;
+    private int life;
     
     // 位置與速度相關的變數
     private float posY;
@@ -34,6 +36,7 @@ public class MainCharacter {
     
     // 分數
     public int score = 0;
+    public int maxScore = 0;
     
     // 現在的狀態
     private int state = NORMAL_RUN;
@@ -51,6 +54,10 @@ public class MainCharacter {
     
     // 建構函式
     public MainCharacter() {
+        gravity = 1f;
+        brightness = 100;
+        life = 1;
+        
         posX = 50;
         posY = LAND_POSY;
         rectBound = new Rectangle();
@@ -82,6 +89,26 @@ public class MainCharacter {
     public void setSpeedX(int speedX) {
         this.speedX = speedX;
     }
+
+    public void addLife() {
+        life++;
+    }
+
+    public int getLife() {
+        return life;
+    }
+
+    public void setBrightness(int brightness) {
+        this.brightness = brightness;
+    }
+
+    public int getBrightness() {
+        return brightness;
+    }
+
+    public void setGravity(float gravity) {
+        this.gravity = gravity;
+    }
     
     // 畫出主角
     public void draw(Graphics g) {
@@ -100,9 +127,9 @@ public class MainCharacter {
                 break;
         }
 //      // 繪製邊界 (用於測試碰撞)
-//      Rectangle bound = getBound();
-//      g.setColor(Color.RED);
-//      g.drawRect(bound.x, bound.y, bound.width, bound.height);
+        Rectangle bound = getBound();
+        g.setColor(Color.RED);
+        g.drawRect(bound.x, bound.y, bound.width, bound.height);
     }
     
     // 更新主角狀態
@@ -115,7 +142,7 @@ public class MainCharacter {
                 state = NORMAL_RUN;
             }
         } else {
-            speedY += GRAVITY;
+            speedY += gravity;
             posY += speedY;
         }
     }
