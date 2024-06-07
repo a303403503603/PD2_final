@@ -81,12 +81,12 @@ public class Land {
     private int getTypeOfLand() {
         Random rand = new Random();
         int type = rand.nextInt(10);
-        if(type == 1) {
+        if(type > 5) {
             return 1;
-        } else if(type == 9) {
-            return 3;
-        } else {
+        } else if(type < 5) {
             return 2;
+        } else {
+            return 3;
         }
     }
     
