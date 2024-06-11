@@ -28,7 +28,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 	private EnemiesManager enemiesManager;
 	private Clouds clouds;
 	private Thread thread;
-	private BackGround backGround; //add
+	private BackGround backGround; //add background version_1;
 
 	private boolean isKeyPressed;
 
@@ -37,8 +37,8 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 	private BufferedImage replayButtonImage;
 	private BufferedImage gameOverButtonImage;
 
-	private float alpha;    //add
-	private float deltaAlpha;    //add
+	private float alpha;    //add background version_1;
+	private float deltaAlpha;    //add background version_1;
 
 	public GameScreen() {
 		mainCharacter = new MainCharacter();
@@ -48,7 +48,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 		gameOverButtonImage = Resource.getResouceImage("data/gameover_text.png");
 		enemiesManager = new EnemiesManager(mainCharacter);
 		clouds = new Clouds(GameWindow.SCREEN_WIDTH, mainCharacter);
-		backGround = new BackGround(0); //add
+		backGround = new BackGround(0); //add background version_1;
 
 	}
 
@@ -98,7 +98,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 			break;
 		}
 		if(gameState == 1) {
-			backGround.draw(g);     //add
+			backGround.draw(g);     //add background version_1;
 		}
 		
 		
