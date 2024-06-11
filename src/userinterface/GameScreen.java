@@ -44,8 +44,8 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 		mainCharacter = new MainCharacter();
 		land = new Land(GameWindow.SCREEN_WIDTH, mainCharacter);
 		mainCharacter.setSpeedX(4);
-		replayButtonImage = Resource.getResouceImage("C:/Users/User/Downloads/TRexGame/Downasaur/data/replay_button.png");
-		gameOverButtonImage = Resource.getResouceImage("C:/Users/User/Downloads/TRexGame/Downasaur/data/gameover_text.png");
+		replayButtonImage = Resource.getResouceImage("data/replay_button.png");
+		gameOverButtonImage = Resource.getResouceImage("data/gameover_text.png");
 		enemiesManager = new EnemiesManager(mainCharacter);
 		clouds = new Clouds(GameWindow.SCREEN_WIDTH, mainCharacter);
 		backGround = new BackGround(0); //add
