@@ -22,11 +22,12 @@ public class MainCharacter {
     private static final int JUMPING = 1;
     private static final int DOWN_RUN = 2;
     private static final int DEATH = 3;
-
+    public static final int MAX_BATTERY = 5;
+    
     private float gravity;
     private int brightness;
     private int life;
-    
+    private int batteryLevel;
     // 位置與速度相關的變數
     private float posY;
     private float posX;
@@ -47,6 +48,7 @@ public class MainCharacter {
     private Animation downRunAnim;
     private BufferedImage deathImage;
     
+
     // 聲音效果
     private AudioClip jumpSound;
     private AudioClip deadSound;
@@ -57,7 +59,7 @@ public class MainCharacter {
         gravity = 1f;
         brightness = 100;
         life = 1;
-        
+        batteryLevel = MAX_BATTERY;
         posX = 50;
         posY = LAND_POSY;
         rectBound = new Rectangle();
@@ -98,9 +100,6 @@ public class MainCharacter {
         return life;
     }
 
-    public void setBrightness(int brightness) {
-        this.brightness = brightness;
-    }
 
     public int getBrightness() {
         return brightness;
@@ -130,6 +129,8 @@ public class MainCharacter {
         Rectangle bound = getBound();
         g.setColor(Color.RED);
         g.drawRect(bound.x, bound.y, bound.width, bound.height);
+
+        drawBatteryStatus(g);
     }
     
     // 更新主角狀態
@@ -214,6 +215,49 @@ public class MainCharacter {
         if(score % 100 == 0) {
             scoreUpSound.play();
         }
+    }
+    
+    //電池狀態
+    public void setBrightness(int brightness) {
+        this.brightness = brightness;
+        updateBatteryLevel();
+    }
+    
+    private void updateBatteryLevel() {
+        batteryLevel = (brightness / 20) + 1;
+        if (batteryLevel > MAX_BATTERY) {
+            batteryLevel = MAX_BATTERY;
+        }
+        if (batteryLevel < 0) {
+            batteryLevel = 0;
+        }
+    }
+
+    private void drawBatteryStatus(Graphics g) {
+        int batteryX = 20;
+        int batteryY = 20;
+        int batteryWidth = 10;
+        int batteryHeight = 20;
+        int gap = 5;
+    
+        for (int i = 0; i < MAX_BATTERY; i++) {
+            if (i < batteryLevel) {
+                g.setColor(Color.GREEN);
+            } else {
+                g.setColor(Color.GRAY);
+            }
+            g.fillRect(batteryX, batteryY + i * (batteryHeight + gap), batteryWidth, batteryHeight);
+        }
+    }
+
+    //撿道具
+    public void pickUpItem(String itemType) {
+        if (itemType.equals("lowGravity")) {
+            setGravity(0.5f); 
+        } else if (itemType.equals("normalGravity")) {
+            setGravity(1f); 
+        }
+        //其他道具效果
     }
     
 }
