@@ -207,6 +207,10 @@ public class MainCharacter {
     public void playDeadSound() {
         deadSound.play();
     }
+    //flower collision sound nora_0611+++
+    public void playFlowerSound() {
+		flowerSound.play();
+	}
     
     // 分數增加
     public void upScore() {

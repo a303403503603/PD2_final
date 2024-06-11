@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import gameobject.BackGround;
 import gameobject.Clouds;
 import gameobject.EnemiesManager;
+import gameobject.FriendsManager;
 import gameobject.Land;
 import gameobject.MainCharacter;
 import util.Resource;
@@ -26,6 +27,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 	private Land land;
 	private MainCharacter mainCharacter;
 	private EnemiesManager enemiesManager;
+	private FriendsManager friendsManager;
 	private Clouds clouds;
 	private Thread thread;
 	private BackGround backGround; //add background version_1;
@@ -47,6 +49,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 		replayButtonImage = Resource.getResouceImage("data/replay_button.png");
 		gameOverButtonImage = Resource.getResouceImage("data/gameover_text.png");
 		enemiesManager = new EnemiesManager(mainCharacter);
+		friendsManager = new FriendsManager(mainCharacter);
 		clouds = new Clouds(GameWindow.SCREEN_WIDTH, mainCharacter);
 		backGround = new BackGround(0); //add background version_1;
 
@@ -68,6 +71,15 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 				gameState = GAME_OVER_STATE;
 				mainCharacter.dead(true);
 			}
+			friendsManager.update();
+			int[] type = new int[1];
+			if (friendsManager.isCollision(type)) {
+				System.out.println("type: " + type[0]);
+				mainCharacter.score += 100;
+				mainCharacter.playFlowerSound();
+				// gameState = GAME_OVER_STATE;
+				// mainCharacter.dead(true);
+			}
 		}
 	}
 
@@ -87,7 +99,8 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 			clouds.draw(g);
 			land.draw(g);
 			enemiesManager.draw(g);
-			mainCharacter.draw(g);			
+			friendsManager.draw(g);
+			mainCharacter.draw(g);
 			g.setColor(Color.BLACK);
 			g.drawString("HI " + mainCharacter.score, 500, 20);
 			if (gameState == GAME_OVER_STATE) {
@@ -184,6 +197,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 
 	private void resetGame() {
 		enemiesManager.reset();
+		friendsManager.reset();
 		mainCharacter.dead(false);
 		mainCharacter.reset();
 	}
