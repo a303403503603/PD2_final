@@ -48,7 +48,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 		gameOverButtonImage = Resource.getResouceImage("C:/Users/User/Downloads/TRexGame/Downasaur/data/gameover_text.png");
 		enemiesManager = new EnemiesManager(mainCharacter);
 		clouds = new Clouds(GameWindow.SCREEN_WIDTH, mainCharacter);
-		backGround = new BackGround(50); //add
+		backGround = new BackGround(0); //add
 
 	}
 
@@ -179,7 +179,6 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
