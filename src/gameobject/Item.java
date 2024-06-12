@@ -8,17 +8,19 @@ import java.util.Random;
 
 public class Item extends Friend {
 	
-	//public static final int Y_LAND = 125;
-    public static final int Y_LAND = 70;
+	// public static final int Y_LAND = 125;
+    public static final int Y_LAND = 92;
+	public static final int COUNT_DOWN = 200;
 	
 	private int posX;
 	private int width;
 	private int height;
 	private int type;
+	private static int countDown = COUNT_DOWN;
 
 	private BufferedImage image;
 	private MainCharacter mainCharacter;
-	private Random rand;
+	// private Random rand;
 	
 	private Rectangle rectBound;
 	
@@ -36,8 +38,26 @@ public class Item extends Friend {
 	}
 	
 	public void draw(Graphics g) {
-		int ranPosY = rand.nextInt(60);
-		g.drawImage(image, posX, Y_LAND - ranPosY , null);
+		int ranPosY = Y_LAND - image.getHeight();
+		Random rand = new Random();
+
+		if(countDown == 0) {
+			countDown = COUNT_DOWN;
+					// System.out.println("ranPosY: " + ranPosY
+			try {
+				ranPosY = rand.nextInt(Y_LAND - image.getHeight());
+			} catch (Exception e) {
+				ranPosY = 0;
+			}
+		} else {
+			countDown--;
+		}
+		// System.out.println("ranPosY: " + ranPosY);
+		if(ranPosY != (Y_LAND - image.getHeight()))
+			System.out.println("randPosY: " + ranPosY);
+		// g.drawImage(image, posX, Y_LAND - image.getHeight(), null
+		g.drawImage(image, posX + ranPosY, Y_LAND - image.getHeight() - ranPosY/2, null);
+		// g.drawImage(image, posX, Y_LAND - image.getHeight(), null);
 		g.setColor(Color.red);
 //		Rectangle bound = getBound();
 //		g.drawRect(bound.x, bound.y, bound.width, bound.height);
