@@ -4,8 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
-public class Flower extends Friend {
+public class Item extends Friend {
 	
 	//public static final int Y_LAND = 125;
     public static final int Y_LAND = 70;
@@ -17,10 +18,11 @@ public class Flower extends Friend {
 
 	private BufferedImage image;
 	private MainCharacter mainCharacter;
+	private Random rand;
 	
 	private Rectangle rectBound;
 	
-	public Flower(MainCharacter mainCharacter, int posX, int width, int height, BufferedImage image, int type) {
+	public Item(MainCharacter mainCharacter, int posX, int width, int height, BufferedImage image, int type) {
 		this.mainCharacter = mainCharacter;
 		this.posX = posX;
 		this.width = width;
@@ -34,7 +36,8 @@ public class Flower extends Friend {
 	}
 	
 	public void draw(Graphics g) {
-		g.drawImage(image, posX, Y_LAND - image.getHeight(), null);
+		int ranPosY = rand.nextInt(60);
+		g.drawImage(image, posX, Y_LAND - ranPosY , null);
 		g.setColor(Color.red);
 //		Rectangle bound = getBound();
 //		g.drawRect(bound.x, bound.y, bound.width, bound.height);

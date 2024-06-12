@@ -12,7 +12,7 @@ public class FriendsManager {
 	
 	private BufferedImage friendRegen;
 	private BufferedImage friendLight;
-	private BufferedImage friendSuperStar;	
+	private BufferedImage friendGravity;	
 	private Random rand;
 	
 	private List<Friend> friends;
@@ -22,7 +22,7 @@ public class FriendsManager {
 		rand = new Random();
 		friendRegen = Resource.getResouceImage("data/flower1.png");
 		friendLight = Resource.getResouceImage("data/flower2.png");
-		friendSuperStar = Resource.getResouceImage("data/flower3.png");
+		friendGravity = Resource.getResouceImage("data/flower3.png");
 		friends = new ArrayList<Friend>();
 		this.mainCharacter = mainCharacter;
 		friends.add(createFriend());
@@ -51,11 +51,11 @@ public class FriendsManager {
 		int type = rand.nextInt(3);
 		switch (type){
 			case 0:
-				return new Flower(mainCharacter, 300, friendRegen.getWidth() - 10, friendRegen.getHeight() - 10, friendRegen, type);
+				return new Item(mainCharacter, 300, friendRegen.getWidth() - 10, friendRegen.getHeight() - 10, friendRegen, type);
 			case 1:
-				return new Flower(mainCharacter, 300, friendLight.getWidth() - 10, friendLight.getHeight() - 10, friendLight, type);
+				return new Item(mainCharacter, 300, friendLight.getWidth() - 10, friendLight.getHeight() - 10, friendLight, type);
 			default:	
-				return new Flower(mainCharacter, 300, friendSuperStar.getWidth() - 10, friendSuperStar.getHeight() - 10, friendSuperStar, type);
+				return new Item(mainCharacter, 300, friendGravity.getWidth() - 10, friendGravity.getHeight() - 10, friendGravity, type);
 		}
 	}
 	

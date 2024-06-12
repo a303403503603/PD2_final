@@ -53,7 +53,7 @@ public class MainCharacter {
     private AudioClip jumpSound;
     private AudioClip deadSound;
     private AudioClip scoreUpSound;
-    private AudioClip flowerSound; //nora_0611+++
+    private AudioClip itemSound; //nora_0611+++
     
     // 建構函式
     public MainCharacter() {
@@ -77,7 +77,7 @@ public class MainCharacter {
             // 載入音效
             jumpSound =  Applet.newAudioClip(new URL("file","","data/jump.wav"));
             deadSound =  Applet.newAudioClip(new URL("file","","data/dead.wav"));
-            flowerSound =  Applet.newAudioClip(new URL("file","","data/flower.wav")); //nora_0611+++
+            itemSound =  Applet.newAudioClip(new URL("file","","data/item.wav")); //nora_0611+++
             scoreUpSound =  Applet.newAudioClip(new URL("file","","data/scoreup.wav"));
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -209,9 +209,9 @@ public class MainCharacter {
     public void playDeadSound() {
         deadSound.play();
     }
-    //flower collision sound nora_0611+++
-    public void playFlowerSound() {
-		flowerSound.play();
+    //Item collision sound nora_0611+++
+    public void playItemSound() {
+		itemSound.play();
 	}
     
     // 分數增加
