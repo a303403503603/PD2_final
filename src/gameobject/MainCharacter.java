@@ -257,13 +257,29 @@ public class MainCharacter {
     }
 
     //撿道具
-    public void pickUpItem(String itemType) {
-        if (itemType.equals("lowGravity")) {
-            setGravity(0.5f); 
-        } else if (itemType.equals("normalGravity")) {
-            setGravity(1f); 
+    public void pickUpItem(int type) {
+        switch(type){
+            case 0:
+                //should be regeneration
+                addLife();
+                break;
+            case 1:
+                //should be lighten up the screen
+                batteryLevel ++;
+                break;
+            case 2:
+                setGravity(0.5f);
+                break;
+            default:
+                break;
         }
-        //其他道具效果
+
+        // if (itemType.equals("lowGravity")) {
+        //     setGravity(0.5f); 
+        // } else if (itemType.equals("normalGravity")) {
+        //     setGravity(1f); 
+        // }
+        // //其他道具效果
     }
     
 }

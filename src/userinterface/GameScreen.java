@@ -75,7 +75,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 			friendsManager.update();
 			int[] type = new int[1];
 			if (friendsManager.isCollision(type)) {
-				System.out.println("type: " + type[0]);
+				//System.out.println("type: " + type[0]);
 				mainCharacter.score += 100;
 				mainCharacter.playItemSound();
 				// gameState = GAME_OVER_STATE;

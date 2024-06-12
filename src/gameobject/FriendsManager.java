@@ -63,6 +63,8 @@ public class FriendsManager {
 		for(Friend e : friends) {
 			if (mainCharacter.getBound().intersects(e.getBound())) {
 				which[0] = e.getType();
+				mainCharacter.pickUpItem(which[0]);
+				e.removeItem();
 				return true;
 			}
 		}
