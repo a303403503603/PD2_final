@@ -1,4 +1,4 @@
-package gameobject.Enemy;
+package gameobject.EnemyFile;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -14,7 +14,7 @@ public class EnemiesManager {
     private BufferedImage chair; 
     private BufferedImage box;
     private BufferedImage bat1;
-    private BufferedImage bat2;
+    //private BufferedImage bat2;
     private Random rand; 
 
     private List<Enemy> enemies; 
@@ -27,7 +27,7 @@ public class EnemiesManager {
         chair = Resource.getResouceImage("data/chair.png");
         box = Resource.getResouceImage("data/box.png");
         bat1 = Resource.getResouceImage("data/bat1.png");
-        bat2 = Resource.getResouceImage("data/bat2.png");
+        //bat2 = Resource.getResouceImage("data/bat2.png");
         enemies = new ArrayList<Enemy>(); 
         this.mainCharacter = mainCharacter;
         enemies.add(createEnemy());
@@ -48,7 +48,6 @@ public class EnemiesManager {
 
             if(enemies.get(0).isOutOfScreen()) {
                 enemies.remove(enemies.get(0));
-                System.out.println("remove");
             }
         }
 
@@ -86,7 +85,8 @@ public class EnemiesManager {
     // 碰撞
     public boolean isCollision() {
         for(Enemy e : enemies) {
-            if (mainCharacter.getBound().intersects(e.getBound())) { // 如果主角与敌人相交
+            if (mainCharacter.getBound().intersects(e.getBound()) && e.getHasCollision() == false) { // 如果主角与敌人相交
+                e.setHasCollision(true);
                 return true; // 返回碰撞true
             }
         }

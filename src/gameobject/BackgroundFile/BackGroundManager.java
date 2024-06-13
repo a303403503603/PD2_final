@@ -1,4 +1,4 @@
-package gameobject.Background;
+package gameobject.BackgroundFile;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -38,9 +38,9 @@ public class BackGroundManager {
 		light2 = Resource.getResouceImage("data/light2.png");
 		lightImageList = Arrays.asList(light1, light2);
 
-		painting1 = Resource.getResouceImage("data/paintings1.png");
-		painting2 = Resource.getResouceImage("data/paintings2.png");
-		painting3 = Resource.getResouceImage("data/paintings3.png");
+		painting1 = Resource.getResouceImage("data/painting1.png");
+		painting2 = Resource.getResouceImage("data/painting2.png");
+		painting3 = Resource.getResouceImage("data/painting3.png");
 		paintingImageList = Arrays.asList(painting1, painting2, painting3);
 
 		land1 = Resource.getResouceImage("data/land1.png");
@@ -48,6 +48,7 @@ public class BackGroundManager {
 		landImageList = Arrays.asList(land1, land2);
 
 		objects = new ArrayList<Object>();
+		listLand = new ArrayList<Object>();
 		this.mainCharacter = mainCharacter;
 		
 		objects.add(createObject(1));
@@ -57,7 +58,7 @@ public class BackGroundManager {
 		for(int i = 0; i < numberOfImageLand; i++) {
             int landX = i * land1.getWidth();
 			Object imageLand = new Object(mainCharacter, landX, LAND_POSY, getRandomImage(landImageList, rand), 3);
-            listLand.add(imageLand);
+			listLand.add(imageLand);
         }
 	}
 	
@@ -86,13 +87,13 @@ public class BackGroundManager {
 	
 	public Object createObject(int type) {
 		if(type == 0) {
-			return new Object(mainCharacter, 300, 125, getRandomImage(lightImageList, rand), 1);
+			return new Object(mainCharacter, 650, 125, getRandomImage(lightImageList, rand), 1);
 		}
 		else if(type == 2) {
-			return new Object(mainCharacter, 300, 125, getRandomImage(paintingImageList, rand), 2);
+			return new Object(mainCharacter, 650, 125, getRandomImage(paintingImageList, rand), 2);
 		}
 		else {
-			return new Object(mainCharacter, 300, LAND_POSY, getRandomImage(landImageList, rand), 3);
+			return new Object(mainCharacter, 650, LAND_POSY, getRandomImage(landImageList, rand), 3);
 		}
 	}
 

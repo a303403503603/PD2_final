@@ -1,4 +1,4 @@
-package gameobject; // 套件聲明
+package gameobject;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
@@ -22,100 +22,185 @@ public class MainCharacter {
     private static final int JUMPING = 1;
     private static final int DOWN_RUN = 2;
     private static final int DEATH = 3;
-    public static final int MAX_BATTERY = 5;
-    
+    public static final int MAX_BATTERY = 15;
+
+    private static final int SCORE_INCREMENT = 10;
+    private static final int TIME_INTERVAL = 1000; // 每秒增加分數
+    private static final int BRIGHTNESS_INCREMENT = 0;
+    private static final int BRIGHTNESS_DECREMENT = 15; // 每次遞減的亮度
+    private static final int DECREMENT_INTERVAL = 2000; // 每 15 秒
+    private static final int MAX_GRAVITY_TIME = 5000;
+    private static final int MAX_LIFE = 3;
+
+    //private boolean isInvincible;
+    //private long invincibleStartTime;
     private float gravity;
+    private String gravityMode;
     private int brightness;
     private int life;
     private int batteryLevel;
+    
+    private long startTime;
+    private long gravityTime;
+    private boolean gravityStatus;
+    private long lastBrightnessDecrementTime;
+
     // 位置與速度相關的變數
     private float posY;
     private float posX;
     private float speedX;
     private float speedY;
     private Rectangle rectBound;
-    
+
     // 分數
-    public int score = 0;
-    public int maxScore = 0;
-    
+    public int score;
+    public int maxScore;
+
     // 現在的狀態
-    private int state = NORMAL_RUN;
-    
+    private int state;
+
     // 不同動畫與圖片
     private Animation normalRunAnim;
     private BufferedImage jumping;
     private Animation downRunAnim;
     private BufferedImage deathImage;
-    
+    private BufferedImage heartImage; // 愛心圖示
 
     // 聲音效果
     private AudioClip jumpSound;
     private AudioClip deadSound;
     private AudioClip scoreUpSound;
-    private AudioClip flowerSound; //nora_0611+++
-    
+   
+
     // 建構函式
     public MainCharacter() {
-        gravity = 1f;
-        brightness = 100;
-        life = 3;
+        //isInvincible = false;
+        gravity = 0.5f;
+        brightness = BRIGHTNESS_INCREMENT;
+        life = MAX_LIFE;
         batteryLevel = MAX_BATTERY;
+        gravityStatus = false;
+        gravityMode = "Earth";
+
+        startTime = System.currentTimeMillis();
+        lastBrightnessDecrementTime = startTime;
+
         posX = 50;
         posY = LAND_POSY;
+        
+        score = 0;
+        maxScore = 0;
+        state = NORMAL_RUN;
+
         rectBound = new Rectangle();
         normalRunAnim = new Animation(90);
-        normalRunAnim.addFrame(Resource.getResouceImage("data/main-character1.png"));
-        normalRunAnim.addFrame(Resource.getResouceImage("data/main-character2.png"));
-        jumping = Resource.getResouceImage("data/main-character3.png");
         downRunAnim = new Animation(90);
-        downRunAnim.addFrame(Resource.getResouceImage("data/main-character5.png"));
-        downRunAnim.addFrame(Resource.getResouceImage("data/main-character6.png"));
-        deathImage = Resource.getResouceImage("data/main-character4.png");
         
         try {
-            // 載入音效
+            normalRunAnim.addFrame(Resource.getResouceImage("data/main-character1.png"));
+            normalRunAnim.addFrame(Resource.getResouceImage("data/main-character2.png"));
+            jumping = Resource.getResouceImage("data/main-character3.png");
+            
+            downRunAnim.addFrame(Resource.getResouceImage("data/main-character5.png"));
+            downRunAnim.addFrame(Resource.getResouceImage("data/main-character6.png"));
+            
+            deathImage = Resource.getResouceImage("data/main-character4.png");
+            heartImage = Resource.getResouceImage("data/heart.png");
+
             jumpSound =  Applet.newAudioClip(new URL("file","","data/jump.wav"));
             deadSound =  Applet.newAudioClip(new URL("file","","data/dead.wav"));
-            flowerSound =  Applet.newAudioClip(new URL("file","","data/flower.wav")); //nora_0611+++
             scoreUpSound =  Applet.newAudioClip(new URL("file","","data/scoreup.wav"));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }
 
-    // 取得 X 軸速度
+
     public float getSpeedX() {
         return speedX;
     }
 
-    // 設置 X 軸速度
     public void setSpeedX(int speedX) {
         this.speedX = speedX;
     }
 
+    //生命值部分
     public void addLife() {
-        life++;
-    }
-
-    public void subLife() {
-        life--;
+        if(life <= 3) {
+            life++;
+        }
     }
 
     public int getLife() {
         return life;
     }
 
+    public void subLife() {
+        if(life > 0) {
+            life--;
+        }
+    }
+
+
+    //亮度部分
+    public void setBrightness() {
+        brightness = 0;
+        updateBatteryLevel();
+    }
 
     public int getBrightness() {
         return brightness;
     }
 
-    public void setGravity(float gravity) {
-        this.gravity = gravity;
+    public int getBatteryLevel() {
+        return batteryLevel;
     }
-    
-    // 畫出主角
+
+    public void increaseBrightness(int increment) { //暫時用不到
+        brightness += increment;
+        if (brightness > 255) {
+            brightness = 255; // 確保亮度不超過最大值
+        }
+        updateBatteryLevel();
+    }
+
+    public void decreaseBrightness(int decrement) {
+        brightness -= decrement;
+        if (brightness < 0) {
+            brightness = 0; // 確保亮度不低於 0
+        }
+        updateBatteryLevel();
+    }
+
+    private void updateBatteryLevel() {
+        batteryLevel = (brightness / 15) + 1;
+        if (batteryLevel > MAX_BATTERY) {
+            batteryLevel = MAX_BATTERY;
+        }
+        if (batteryLevel < 0) {
+            batteryLevel = 0;
+        }
+    }
+
+
+    //重力部分
+    public void changeGravity() {
+        gravityTime = System.currentTimeMillis();
+        setGravity(0.1f);
+        gravityStatus = true;
+    }
+
+    private void setGravity(float gravity) {
+        this.gravity = gravity;
+        if(gravity == 0.1f) {
+            gravityMode = "Moon";
+        }
+        else {
+            gravityMode = "Earth";
+        }
+    }
+
+
     public void draw(Graphics g) {
         switch(state) {
             case NORMAL_RUN:
@@ -131,14 +216,17 @@ public class MainCharacter {
                 g.drawImage(deathImage, (int) posX, (int) posY, null);
                 break;
         }
-//      // 繪製邊界 (用於測試碰撞)
-        Rectangle bound = getBound();
-        g.setColor(Color.RED);
-        g.drawRect(bound.x, bound.y, bound.width, bound.height);
+
+        // 繪製邊界 (用於測試碰撞)
+        //Rectangle bound = getBound();
+        //g.setColor(Color.RED);
+        //g.drawRect(bound.x, bound.y, bound.width, bound.height);
 
         drawBatteryStatus(g);
+        drawLifeStatus(g);
+        drawScore(g);
     }
-    
+
     // 更新主角狀態
     public void update() {
         normalRunAnim.updateFrame();
@@ -152,9 +240,28 @@ public class MainCharacter {
             speedY += gravity;
             posY += speedY;
         }
+
+        long currentTime = System.currentTimeMillis();
+
+        // 計算時間並增加分數
+        if (currentTime - startTime >= TIME_INTERVAL) {
+            score += SCORE_INCREMENT;
+            startTime = currentTime; // 重置計時器
+        }
+
+        // 亮度每 15 秒遞減一次
+        if (currentTime - lastBrightnessDecrementTime >= DECREMENT_INTERVAL) {
+            increaseBrightness(BRIGHTNESS_DECREMENT);
+            lastBrightnessDecrementTime = currentTime; // 重置亮度遞減計時器
+        }
+
+        if ((currentTime - gravityTime) > MAX_GRAVITY_TIME && gravityStatus == true) {
+            setGravity(0.4f);
+            gravityTime = currentTime;
+            gravityStatus = false;
+        }
     }
-    
-    // 主角跳躍
+
     public void jump() {
         if(posY >= LAND_POSY) {
             if(jumpSound != null) {
@@ -165,8 +272,8 @@ public class MainCharacter {
             state = JUMPING;
         }
     }
+
     
-    // 主角下蹲
     public void down(boolean isDown) {
         if(state == JUMPING) {
             return;
@@ -177,7 +284,7 @@ public class MainCharacter {
             state = NORMAL_RUN;
         }
     }
-    
+
     // 取得主角的邊界
     public Rectangle getBound() {
         rectBound = new Rectangle();
@@ -194,80 +301,72 @@ public class MainCharacter {
         }
         return rectBound;
     }
-    
+
     // 主角死亡
     public void dead(boolean isDeath) {
         if(isDeath) {
+            if(score > maxScore) {
+                maxScore = score;
+            }
             state = DEATH;
         } else {
             state = NORMAL_RUN;
         }
     }
-    
+
     // 重置主角位置
     public void reset() {
         posY = LAND_POSY;
+
+        gravity = 0.5f;
+        brightness = BRIGHTNESS_INCREMENT;
+        life = MAX_LIFE;
+        batteryLevel = MAX_BATTERY;
+        gravityStatus = false;
+        gravityMode = "Earth";
+        score = 0;
+
+        startTime = System.currentTimeMillis();
+        lastBrightnessDecrementTime = startTime;
     }
-    
+
     // 播放死亡音效
     public void playDeadSound() {
         deadSound.play();
     }
-    //flower collision sound nora_0611+++
-    public void playFlowerSound() {
-		flowerSound.play();
-	}
-    
-    // 分數增加
-    public void upScore() {
-        score += 20;
-        // 每增加 100 分播放一次音效
-        if(score % 100 == 0) {
-            scoreUpSound.play();
-        }
-    }
-    
-    //電池狀態
-    public void setBrightness(int brightness) {
-        this.brightness = brightness;
-        updateBatteryLevel();
-    }
-    
-    private void updateBatteryLevel() {
-        batteryLevel = (brightness / 20) + 1;
-        if (batteryLevel > MAX_BATTERY) {
-            batteryLevel = MAX_BATTERY;
-        }
-        if (batteryLevel < 0) {
-            batteryLevel = 0;
-        }
-    }
+
 
     private void drawBatteryStatus(Graphics g) {
-        int batteryX = 20;
-        int batteryY = 20;
-        int batteryWidth = 10;
-        int batteryHeight = 20;
+        int batteryX = 170;
+        int batteryY = 0;
+        int batteryWidth = 25;
+        int batteryHeight = 10;
         int gap = 5;
-    
+        
         for (int i = 0; i < MAX_BATTERY; i++) {
-            if (i < batteryLevel) {
+            if ((15 - batteryLevel) > i) {
                 g.setColor(Color.GREEN);
             } else {
                 g.setColor(Color.GRAY);
             }
-            g.fillRect(batteryX, batteryY + i * (batteryHeight + gap), batteryWidth, batteryHeight);
+            g.fillRect(batteryX  + i * (batteryHeight + gap) , batteryY, batteryWidth, batteryHeight);
         }
     }
 
-    //撿道具
-    public void pickUpItem(String itemType) {
-        if (itemType.equals("lowGravity")) {
-            setGravity(0.5f); 
-        } else if (itemType.equals("normalGravity")) {
-            setGravity(1f); 
+    private void drawLifeStatus(Graphics g) {
+        int heartX = 500;
+        int heartY = 10;
+        int gap = 5;
+        
+        for (int i = 0; i < life; i++) {
+            g.drawImage(heartImage, heartX + i * (heartImage.getWidth() + gap), heartY, null);
         }
-        //其他道具效果
     }
-    
+
+    private void drawScore(Graphics g) {
+        g.setColor(Color.BLACK);
+        g.drawString("Max score: " + maxScore, 10, 20);
+        g.drawString("score: " + score, 10, 30);
+        g.drawString("gravity: " + gravityMode, 10, 40);
+    }
 }

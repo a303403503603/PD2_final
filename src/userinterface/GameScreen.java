@@ -11,9 +11,9 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 import gameobject.MainCharacter;
-import gameobject.Background.BackGround;
-import gameobject.Background.BackGroundManager;
-import gameobject.Enemy.EnemiesManager;
+//import gameobject.BackgroundFile.BackGround;
+import gameobject.BackgroundFile.BackGroundManager;
+import gameobject.EnemyFile.EnemiesManager;
 import gameobject.Props.PropsManager;
 import util.Resource;
 
@@ -22,7 +22,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 	private static final int START_GAME_STATE = 0;
 	private static final int GAME_PLAYING_STATE = 1;
 	private static final int GAME_OVER_STATE = 2;
-	private BackGround backGround;
+	//private BackGround backGround;
 
 	private MainCharacter mainCharacter;
 	private BackGroundManager backGroundManager;
@@ -33,12 +33,10 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 	private boolean isKeyPressed;
 
 	private int gameState;
+	private long endProcessGame;
 
 	private BufferedImage replayButtonImage;
 	private BufferedImage gameOverButtonImage;
-
-	private float alpha;    //add background version_1;
-	private float deltaAlpha;    //add background version_1;
 
 	public GameScreen() {
 		mainCharacter = new MainCharacter();
@@ -51,7 +49,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 		replayButtonImage = Resource.getResouceImage("data/replay_button.png");
 		gameOverButtonImage = Resource.getResouceImage("data/gameover_text.png");
 		
-		backGround = new BackGround(0); //add background version_1;
+		//backGround = new BackGround(0); //add background version_1;
 		gameState = START_GAME_STATE;
 	}
 
@@ -68,57 +66,52 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 			propsManager.update();
 
 			if (enemiesManager.isCollision()) {
-				mainCharacter.playDeadSound();
 				if(mainCharacter.getLife() <= 1) {
+					mainCharacter.playDeadSound();
 					gameState = GAME_OVER_STATE;
 					mainCharacter.dead(true);
 				}
 				else {
 					mainCharacter.subLife();
+					
 				}
 			}
 			
 			int propType = propsManager.isCollision();
 			if (propType != 0) {
-				System.out.println("type: " + propType);
-				mainCharacter.setBonus(propType);
-				mainCharacter.playFlowerSound();
+				pickUpItem(propType);
 			}
+
 		}
 	}
 
+	private void pickUpItem(int itemType) {
+        if (itemType == 1) {
+            mainCharacter.addLife();
+        } 
+        else if (itemType == 2) {
+            mainCharacter.setBrightness();
+        } 
+        else if (itemType == 3) {
+			mainCharacter.changeGravity();
+		}
+    }
+
 	public void paint(Graphics g) {
 		super.paintComponent(g);
-		g.setColor(Color.decode("#f7f7f7"));
-		g.fillRect(0, 0, getWidth(), getHeight());
-
-		switch (gameState) {
-		case START_GAME_STATE:
-			mainCharacter.draw(g);
-			break;
-		case GAME_PLAYING_STATE:			
-		case GAME_OVER_STATE:
-			
-			backGroundManager.draw(g);
-			enemiesManager.draw(g);
-			propsManager.draw(g);//nora_0611+++
-			mainCharacter.draw(g);
-
-			g.setColor(Color.BLACK);
-			g.drawString("HI " + mainCharacter.score, 500, 20);
-			if (gameState == GAME_OVER_STATE) {
-				g.drawImage(gameOverButtonImage, 200, 30, null);
-				g.drawImage(replayButtonImage, 283, 50, null);
-				
-			}
-			break;
+		backGroundManager.draw(g);
+		enemiesManager.draw(g);
+		propsManager.draw(g);//nora_0611+++
+		mainCharacter.draw(g);
+		if (gameState == GAME_PLAYING_STATE) {
+			g.setColor(new Color(0, 0, 0, mainCharacter.getBrightness()));
+			g.fillRect(0, 0, getWidth(), getHeight());
 		}
-		if(gameState == 1) {
-			backGround.draw(g);     //add background version_1;
+
+		if (gameState == GAME_OVER_STATE) {
+			g.drawImage(gameOverButtonImage, 200, 30, null);
+			g.drawImage(replayButtonImage, 283, 50, null);
 		}
-		
-		
-		
 	}
 
 	@Override
@@ -132,8 +125,8 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 		int msSleep;
 		int nanoSleep;
 
-		long endProcessGame;
-		long lag = 0;
+		//long endProcessGame;
+		//long lag = 0;
 
 		while (true) {
 			gameUpdate();
@@ -198,6 +191,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 	}
 
 	private void resetGame() {
+		backGroundManager.reset();
 		enemiesManager.reset();
 		propsManager.reset();//nora_0611+++
 		mainCharacter.dead(false);

@@ -1,4 +1,4 @@
-package gameobject.Background;
+package gameobject.BackgroundFile;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
