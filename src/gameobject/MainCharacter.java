@@ -1,4 +1,4 @@
-package gameobject; // 套件聲明
+package gameobject;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
@@ -23,48 +23,63 @@ public class MainCharacter {
     private static final int DOWN_RUN = 2;
     private static final int DEATH = 3;
     public static final int MAX_BATTERY = 5;
-    
+
+    private boolean isInvincible;
+    private long invincibleStartTime;
+    private static final int INVINCIBLE_DURATION = 8000; // 無敵持續時間 8 秒
     private float gravity;
     private int brightness;
     private int life;
     private int batteryLevel;
+    private long startTime;
+    private static final int SCORE_INCREMENT = 100;
+    private static final int TIME_INTERVAL = 1000; // 每秒增加分數
+    private static final int BRIGHTNESS_INCREMENT = 20;
+    private static final int BRIGHTNESS_DECREMENT = 25; // 每次遞減的亮度
+    private static final int DECREMENT_INTERVAL = 15000; // 每 15 秒
+    private long lastBrightnessDecrementTime;
+
     // 位置與速度相關的變數
     private float posY;
     private float posX;
     private float speedX;
     private float speedY;
     private Rectangle rectBound;
-    
+
     // 分數
     public int score = 0;
     public int maxScore = 0;
-    
+
     // 現在的狀態
     private int state = NORMAL_RUN;
-    
+
     // 不同動畫與圖片
     private Animation normalRunAnim;
     private BufferedImage jumping;
     private Animation downRunAnim;
     private BufferedImage deathImage;
-    
+    private BufferedImage heartImage; // 愛心圖示
 
     // 聲音效果
     private AudioClip jumpSound;
     private AudioClip deadSound;
     private AudioClip scoreUpSound;
-    private AudioClip flowerSound; //nora_0611+++
-    
+    private AudioClip flowerSound;
+
     // 建構函式
     public MainCharacter() {
         gravity = 1f;
         brightness = 100;
-        life = 1;
+        life = 3; // 初始生命值設為3
         batteryLevel = MAX_BATTERY;
         posX = 50;
         posY = LAND_POSY;
+        isInvincible = false;
+        startTime = System.currentTimeMillis();
         rectBound = new Rectangle();
         normalRunAnim = new Animation(90);
+        lastBrightnessDecrementTime = startTime;
+
         normalRunAnim.addFrame(Resource.getResouceImage("data/main-character1.png"));
         normalRunAnim.addFrame(Resource.getResouceImage("data/main-character2.png"));
         jumping = Resource.getResouceImage("data/main-character3.png");
@@ -72,12 +87,13 @@ public class MainCharacter {
         downRunAnim.addFrame(Resource.getResouceImage("data/main-character5.png"));
         downRunAnim.addFrame(Resource.getResouceImage("data/main-character6.png"));
         deathImage = Resource.getResouceImage("data/main-character4.png");
-        
+        heartImage = Resource.getResouceImage("data/heart.png");
+
         try {
             // 載入音效
             jumpSound =  Applet.newAudioClip(new URL("file","","data/jump.wav"));
             deadSound =  Applet.newAudioClip(new URL("file","","data/dead.wav"));
-            flowerSound =  Applet.newAudioClip(new URL("file","","data/flower.wav")); //nora_0611+++
+            flowerSound =  Applet.newAudioClip(new URL("file","","data/flower.wav"));
             scoreUpSound =  Applet.newAudioClip(new URL("file","","data/scoreup.wav"));
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -102,7 +118,6 @@ public class MainCharacter {
         return life;
     }
 
-
     public int getBrightness() {
         return brightness;
     }
@@ -110,7 +125,7 @@ public class MainCharacter {
     public void setGravity(float gravity) {
         this.gravity = gravity;
     }
-    
+
     // 畫出主角
     public void draw(Graphics g) {
         switch(state) {
@@ -127,14 +142,17 @@ public class MainCharacter {
                 g.drawImage(deathImage, (int) posX, (int) posY, null);
                 break;
         }
-//      // 繪製邊界 (用於測試碰撞)
+
+        // 繪製邊界 (用於測試碰撞)
         Rectangle bound = getBound();
         g.setColor(Color.RED);
         g.drawRect(bound.x, bound.y, bound.width, bound.height);
 
         drawBatteryStatus(g);
+        drawLifeStatus(g);
+        drawScore(g);
     }
-    
+
     // 更新主角狀態
     public void update() {
         normalRunAnim.updateFrame();
@@ -148,8 +166,27 @@ public class MainCharacter {
             speedY += gravity;
             posY += speedY;
         }
+
+        long currentTime = System.currentTimeMillis();
+
+        // 計算時間並增加分數
+        if (currentTime - startTime >= TIME_INTERVAL) {
+            score += SCORE_INCREMENT;
+            startTime = currentTime; // 重置計時器
+        }
+
+        // 亮度每 15 秒遞減一次
+        if (currentTime - lastBrightnessDecrementTime >= DECREMENT_INTERVAL) {
+            decreaseBrightness(BRIGHTNESS_DECREMENT);
+            lastBrightnessDecrementTime = currentTime; // 重置亮度遞減計時器
+        }
+
+        // 檢查無敵狀態是否結束
+        if (isInvincible && currentTime - invincibleStartTime > INVINCIBLE_DURATION) {
+            isInvincible = false;
+        }
     }
-    
+
     // 主角跳躍
     public void jump() {
         if(posY >= LAND_POSY) {
@@ -161,7 +198,7 @@ public class MainCharacter {
             state = JUMPING;
         }
     }
-    
+
     // 主角下蹲
     public void down(boolean isDown) {
         if(state == JUMPING) {
@@ -173,7 +210,7 @@ public class MainCharacter {
             state = NORMAL_RUN;
         }
     }
-    
+
     // 取得主角的邊界
     public Rectangle getBound() {
         rectBound = new Rectangle();
@@ -190,7 +227,7 @@ public class MainCharacter {
         }
         return rectBound;
     }
-    
+
     // 主角死亡
     public void dead(boolean isDeath) {
         if(isDeath) {
@@ -199,21 +236,22 @@ public class MainCharacter {
             state = NORMAL_RUN;
         }
     }
-    
+
     // 重置主角位置
     public void reset() {
         posY = LAND_POSY;
     }
-    
+
     // 播放死亡音效
     public void playDeadSound() {
         deadSound.play();
     }
-    //flower collision sound nora_0611+++
+
+    // flower collision sound
     public void playFlowerSound() {
-		flowerSound.play();
-	}
-    
+        flowerSound.play();
+    }
+
     // 分數增加
     public void upScore() {
         score += 20;
@@ -222,13 +260,18 @@ public class MainCharacter {
             scoreUpSound.play();
         }
     }
-    
-    //電池狀態
+
+    // 電池狀態
     public void setBrightness(int brightness) {
         this.brightness = brightness;
+        if (this.brightness > 100) {
+            this.brightness = 100;
+        } else if (this.brightness < 0) {
+            this.brightness = 0;
+        }
         updateBatteryLevel();
     }
-    
+
     private void updateBatteryLevel() {
         batteryLevel = (brightness / 20) + 1;
         if (batteryLevel > MAX_BATTERY) {
@@ -256,14 +299,62 @@ public class MainCharacter {
         }
     }
 
-    //撿道具
+    private void drawLifeStatus(Graphics g) {
+        int heartX = 20;
+        int heartY = 50;
+        int gap = 5;
+        
+        for (int i = 0; i < life; i++) {
+            g.drawImage(heartImage, heartX + i * (heartImage.getWidth() + gap), heartY, null);
+        }
+    }
+
+    private void drawScore(Graphics g) {
+        g.setColor(Color.BLACK);
+        g.drawString("Score: " + score, 20, 100);
+    }
+
+    // 撿道具
     public void pickUpItem(String itemType) {
         if (itemType.equals("lowGravity")) {
             setGravity(0.5f); 
         } else if (itemType.equals("normalGravity")) {
             setGravity(1f); 
+        } else if (itemType.equals("invincibility")) {
+            isInvincible = true;
+            invincibleStartTime = System.currentTimeMillis();
+        } else if (itemType.equals("battery")) {
+            increaseBrightness(BRIGHTNESS_INCREMENT);
         }
-        //其他道具效果
+        // 其他道具效果
     }
-    
+
+    public void collideWithObstacle() {
+        if (!isInvincible) {
+            if (life > 0) {
+                life--;
+            }
+            if (life == 0) {
+                state = DEATH;
+            }
+        }
+    }
+
+    // 新增增加亮度的方法
+    public void increaseBrightness(int increment) {
+        brightness += increment;
+        if (brightness > 100) {
+            brightness = 100; // 確保亮度不超過最大值
+        }
+        updateBatteryLevel();
+    }
+
+    // 新增減少亮度的方法
+    public void decreaseBrightness(int decrement) {
+        brightness -= decrement;
+        if (brightness < 0) {
+            brightness = 0; // 確保亮度不低於 0
+        }
+        updateBatteryLevel();
+    }
 }
