@@ -38,6 +38,7 @@ public class MainCharacter {
     private static final int BRIGHTNESS_DECREMENT = 25; // 每次遞減的亮度
     private static final int DECREMENT_INTERVAL = 15000; // 每 15 秒
     private long lastBrightnessDecrementTime;
+    private static final int MAX_LIFE = 3;
 
     // 位置與速度相關的變數
     private float posY;
@@ -325,6 +326,8 @@ public class MainCharacter {
             invincibleStartTime = System.currentTimeMillis();
         } else if (itemType.equals("battery")) {
             increaseBrightness(BRIGHTNESS_INCREMENT);
+        } else if (itemType.equals("heal")) {
+            increaseLife();
         }
         // 其他道具效果
     }
@@ -357,4 +360,9 @@ public class MainCharacter {
         }
         updateBatteryLevel();
     }
+    public void increaseLife() {
+        if (life < MAX_LIFE) {
+            life++;
+        }
+}
 }
