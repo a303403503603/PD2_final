@@ -7,6 +7,7 @@ public abstract class Friend {
 	private boolean hasCollision = false;
 	public abstract int getType();
 	public abstract void update();
+	public abstract void removeItem();
 	public abstract void draw(Graphics g);
 	public abstract Rectangle getBound();
 	public abstract boolean isOutOfScreen();
