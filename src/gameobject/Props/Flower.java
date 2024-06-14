@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 import gameobject.MainCharacter;
 
@@ -16,6 +17,8 @@ public class Flower extends Friend {
 	private int width;
 	private int height;
 	private int type;
+	private static int ranPosY =  Y_LAND;
+	private Random rand = new Random();
 
 	private BufferedImage image;
 	private MainCharacter mainCharacter;
@@ -35,8 +38,13 @@ public class Flower extends Friend {
 		posX -= mainCharacter.getSpeedX();
 	}
 	
+	public void removeItem(){
+		ranPosY = 500;
+	}
+
 	public void draw(Graphics g) {
-		g.drawImage(image, posX, Y_LAND - image.getHeight(), null);
+		//g.drawImage(image, posX, Y_LAND - image.getHeight(), null);
+		g.drawImage(image, posX, Y_LAND - ranPosY, null);
 		g.setColor(Color.red);
 //		Rectangle bound = getBound();
 //		g.drawRect(bound.x, bound.y, bound.width, bound.height);
@@ -57,7 +65,12 @@ public class Flower extends Friend {
 	@Override
 	public boolean isOutOfScreen() {
 		if(posX < -image.getWidth()) {
-			return true;
+		//ranPosY = rand.nextInt(Y_LAND - image.getHeight());
+		ranPosY = rand.nextInt(Y_LAND);
+		if(ranPosY < 15) 
+			ranPosY = 15;
+		//System.out.println("randPosY2: " + ranPosY);
+		return true;
 		}
 		return false;
 	}

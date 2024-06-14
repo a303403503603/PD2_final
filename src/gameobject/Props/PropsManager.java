@@ -76,6 +76,7 @@ public class PropsManager {
 			if (mainCharacter.getBound().intersects(e.getBound()) && e.getHasCollision() == false) {
 				e.setHasCollision(true);
 				flowerSound.play();
+				e.removeItem();
 				return e.getType();
 			}
 		}
