@@ -17,7 +17,7 @@ public class PropsManager {
 	
 	private BufferedImage friendRegen;
 	private BufferedImage friendLight;
-	private BufferedImage friendSuperStar;	
+	private BufferedImage friendGravity;	
 	private Random rand;
 	private AudioClip flowerSound;
 	
@@ -30,7 +30,7 @@ public class PropsManager {
 			flowerSound =  Applet.newAudioClip(new URL("file","","data/flower.wav"));
 			friendRegen = Resource.getResouceImage("data/flower1.png");
 			friendLight = Resource.getResouceImage("data/flower2.png");
-			friendSuperStar = Resource.getResouceImage("data/flower3.png");
+			friendGravity = Resource.getResouceImage("data/flower3.png");
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -67,7 +67,7 @@ public class PropsManager {
 			return new Flower(mainCharacter, 650, friendLight.getWidth() - 10, friendLight.getHeight() - 10, friendLight, 2);
 		}
 		else{	
-			return new Flower(mainCharacter, 650, friendSuperStar.getWidth() - 10, friendSuperStar.getHeight() - 10, friendSuperStar, 3);
+			return new Flower(mainCharacter, 650, friendGravity.getWidth() - 10, friendGravity.getHeight() - 10, friendGravity, 3);
 		}
 	}
 	
