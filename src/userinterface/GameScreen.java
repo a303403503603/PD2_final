@@ -201,6 +201,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 		friendsManager.reset();//nora_0611+++
 		mainCharacter.dead(false);
 		mainCharacter.reset();
+		backGround.reset();  //add backGround version_2
 	}
 
 }
