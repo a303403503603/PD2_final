@@ -36,7 +36,7 @@ public class BackGroundManager {
 	
 	public BackGroundManager (MainCharacter mainCharacter, int width) {
 		rand = new Random();
-		light1 = Resource.getResouceImage("data/cloud.png");
+		light1 = Resource.getResouceImage("data/light1.png");
 		light2 = Resource.getResouceImage("data/light2.png");
 		lightImageList = Arrays.asList(light1, light2);
 
