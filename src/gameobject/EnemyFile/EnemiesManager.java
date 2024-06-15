@@ -50,8 +50,6 @@ public class EnemiesManager {
                 enemies.remove(enemies.get(0));
             }
         }
-
-        
     }
     
     // 绘制敌人
@@ -68,15 +66,16 @@ public class EnemiesManager {
         int posX = 650 + rand.nextInt(150);
         
         if(type == 4) {
-            posX = (posX +300 -adjust) * (int)(mainCharacter.getSpeedX()/4);
+            posX = (posX +300 -adjust);// * (int)(mainCharacter.getSpeedX()/4);
             adjust = 100; // 蝙蝠移動速度更快，會拉近與前一個障礙物的距離、拉開與下一個的距離，所以蝙蝠出現位置要比不會移動的障礙物更遠，蝙蝠的下一個障礙物出現位置要往左挪
             return new EnemyInTheAir(mainCharacter, posX, bat1.getWidth() - 10, bat1.getHeight() - 10); //, bat1, bat2
+            
         } else if(type/2 == 0){
-            posX = (posX -adjust) * (int)(mainCharacter.getSpeedX()/4);
+            posX = (posX -adjust);// * (int)(mainCharacter.getSpeedX()/4);
             adjust = 0;
             return new EnemyOnTheGround(mainCharacter, posX, box.getWidth() - 10, box.getHeight() - 10, box);
         } else {
-            posX = (posX -adjust) * (int)(mainCharacter.getSpeedX()/4);
+            posX = (posX -adjust);// * (int)(mainCharacter.getSpeedX()/4);
             adjust = 0;
             return new EnemyOnTheGround(mainCharacter, posX, chair.getWidth() - 10, chair.getHeight() - 10, chair);
         }

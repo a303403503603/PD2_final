@@ -40,7 +40,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 
 	public GameScreen() {
 		mainCharacter = new MainCharacter();
-		mainCharacter.setSpeedX(4);
+		mainCharacter.setSpeedX((float)2.5);
 		
 		backGroundManager = new BackGroundManager(mainCharacter, GameWindow.SCREEN_WIDTH);
 		enemiesManager = new EnemiesManager(mainCharacter);

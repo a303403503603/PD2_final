@@ -75,7 +75,7 @@ public class MainCharacter {
     // 建構函式
     public MainCharacter() {
         //isInvincible = false;
-        gravity = 0.5f;
+        gravity = 0.4f;
         brightness = BRIGHTNESS_INCREMENT;
         life = MAX_LIFE;
         batteryLevel = MAX_BATTERY;
@@ -120,8 +120,12 @@ public class MainCharacter {
         return speedX;
     }
 
-    public void setSpeedX(int speedX) {
+    public void setSpeedX(float speedX) {
         this.speedX = speedX;
+    }
+
+    public void addSpeedX() {
+        speedX += 0.2;
     }
 
     //生命值部分
@@ -173,7 +177,7 @@ public class MainCharacter {
     }
 
     private void updateBatteryLevel() {
-        batteryLevel = (brightness / 15) + 1;
+        batteryLevel = (brightness / 15);
         if (batteryLevel > MAX_BATTERY) {
             batteryLevel = MAX_BATTERY;
         }
@@ -186,13 +190,13 @@ public class MainCharacter {
     //重力部分
     public void changeGravity() {
         gravityTime = System.currentTimeMillis();
-        setGravity(0.1f);
+        setGravity(0.25f);
         gravityStatus = true;
     }
 
     private void setGravity(float gravity) {
         this.gravity = gravity;
-        if(gravity == 0.1f) {
+        if(gravity == 0.25f) {
             gravityMode = "Moon";
         }
         else {
@@ -229,6 +233,7 @@ public class MainCharacter {
 
     // 更新主角狀態
     public void update() {
+        
         normalRunAnim.updateFrame();
         downRunAnim.updateFrame();
         if(posY >= LAND_POSY) {
@@ -246,8 +251,14 @@ public class MainCharacter {
         // 計算時間並增加分數
         if (currentTime - startTime >= TIME_INTERVAL) {
             score += SCORE_INCREMENT;
+            if(score != 0 && score % 100 == 0) {
+                scoreUpSound.play();
+                addSpeedX();
+            }
             startTime = currentTime; // 重置計時器
         }
+
+        
 
         // 亮度每 15 秒遞減一次
         if (currentTime - lastBrightnessDecrementTime >= DECREMENT_INTERVAL) {
@@ -318,7 +329,8 @@ public class MainCharacter {
     public void reset() {
         posY = LAND_POSY;
 
-        gravity = 0.5f;
+        gravity = 0.4f;
+        setSpeedX((float)2.5);
         brightness = BRIGHTNESS_INCREMENT;
         life = MAX_LIFE;
         batteryLevel = MAX_BATTERY;
@@ -344,10 +356,10 @@ public class MainCharacter {
         int gap = 5;
         
         for (int i = 0; i < MAX_BATTERY; i++) {
-            if ((15 - batteryLevel) > i) {
-                g.setColor(Color.GREEN);
-            } else {
+            if ((15 - batteryLevel) < i) {
                 g.setColor(Color.GRAY);
+            } else {
+                g.setColor(Color.GREEN);
             }
             g.fillRect(batteryX  + i * (batteryHeight + gap) , batteryY, batteryWidth, batteryHeight);
         }
