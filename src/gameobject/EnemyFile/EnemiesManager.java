@@ -1,12 +1,11 @@
 package gameobject.EnemyFile;
 
+import gameobject.MainCharacter;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import gameobject.MainCharacter;
 import util.Resource;
 
 public class EnemiesManager {
@@ -14,32 +13,29 @@ public class EnemiesManager {
     private BufferedImage chair; 
     private BufferedImage box;
     private BufferedImage bat1;
-    //private BufferedImage bat2;
     private Random rand; 
 
     private List<Enemy> enemies; 
     private MainCharacter mainCharacter; 
 
     
-    // 构造函数
     public EnemiesManager(MainCharacter mainCharacter) {
-        rand = new Random(); 
+        rand = new Random();
         chair = Resource.getResouceImage("data/chair.png");
         box = Resource.getResouceImage("data/box.png");
         bat1 = Resource.getResouceImage("data/bat1.png");
-        //bat2 = Resource.getResouceImage("data/bat2.png");
         enemies = new ArrayList<Enemy>(); 
         this.mainCharacter = mainCharacter;
         enemies.add(createEnemy());
     }
     
-    // 更新敌人状态
+    // 更新enemy狀態
     public void update() {
         for(Enemy e : enemies) {
             e.update();
         }
         
-        if(enemies.size() == 0) {
+        if(enemies.isEmpty()) {
             enemies.add(createEnemy());
         } else {
             if(enemies.get(enemies.size()-1).isAtX(400)) { //每次update都用list中最後一個enemy的位置來確認是否需要新增enemy
@@ -49,12 +45,10 @@ public class EnemiesManager {
             if(enemies.get(0).isOutOfScreen()) {
                 enemies.remove(enemies.get(0));
             }
-        }
-
-        
+        }  
     }
     
-    // 绘制敌人
+    // 繪製所有list中的enemy
     public void draw(Graphics g) {
         for(Enemy e : enemies) {
             e.draw(g);
@@ -62,7 +56,7 @@ public class EnemiesManager {
     }
     
     int adjust = 0;
-    // 创建敌人
+    // 建立一個新的enemy，並加到list中
     private Enemy createEnemy() {
         int type = rand.nextInt(5); 
         int posX = 650 + rand.nextInt(150);
@@ -82,7 +76,7 @@ public class EnemiesManager {
         }
     }
     
-    // 碰撞
+    // 判斷是否碰撞
     public boolean isCollision() {
         for(Enemy e : enemies) {
             if (mainCharacter.getBound().intersects(e.getBound()) && e.getHasCollision() == false) { // 如果主角与敌人相交
@@ -96,7 +90,7 @@ public class EnemiesManager {
     // 重置
     public void reset() {
         enemies.clear(); 
-        if(enemies.size() == 0) {
+        if(enemies.isEmpty()) { // 若update()還沒被呼叫(list中還沒有enemy)，就新增一個enemy到list中
             enemies.add(createEnemy()); 
         }
     }
