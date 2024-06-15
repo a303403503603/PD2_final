@@ -54,6 +54,10 @@ public class BackGround extends JPanel{
         g.fillRect(0, 0, 600, 175);
     }
 
+    public void reset() {
+        alpha = 0;
+    }
+
 
     @Override
     protected void paintComponent(Graphics g) {
