@@ -18,7 +18,7 @@ public class Object {
 
     
     public Object(MainCharacter mainCharacter, int posX, int posY, BufferedImage image, int type) {
-        this.posX = posX; // 设置X坐标
+        this.posX = posX;     // 設置X座標
 		this.posY = posY;
 		this.image = image;
 		this.type = type;
