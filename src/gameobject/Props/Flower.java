@@ -42,6 +42,7 @@ public class Flower extends Friend {
 		ranPosY = 500;
 	}
 
+	//設置參數
 	public void draw(Graphics g) {
 		//g.drawImage(image, posX, Y_LAND - image.getHeight(), null);
 		g.drawImage(image, posX, Y_LAND - ranPosY, null);
