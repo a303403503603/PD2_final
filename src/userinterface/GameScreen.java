@@ -84,15 +84,16 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 		}
 	}
 
+	//道具功能實作
 	private void pickUpItem(int itemType) {
         if (itemType == 1) {
-            mainCharacter.addLife();
+            mainCharacter.addLife();	//添加生命
         } 
         else if (itemType == 2) {
-            mainCharacter.setBrightness();
+            mainCharacter.setBrightness();	//添加亮度
         } 
         else if (itemType == 3) {
-			mainCharacter.changeGravity();
+			mainCharacter.changeGravity();	    //增加跳躍能力
 		}
     }
 
@@ -102,6 +103,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 		enemiesManager.draw(g);
 		propsManager.draw(g);//nora_0611+++
 		mainCharacter.draw(g);
+		
 		//畫面做明暗度的調整
 		if (gameState == GAME_PLAYING_STATE) {
 			g.setColor(new Color(0, 0, 0, mainCharacter.getBrightness()));
@@ -144,8 +146,8 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 			lastTime = System.nanoTime();
 		}
 	}
-
-	@Override
+	//調整遊戲模式
+	@Override    
 	public void keyPressed(KeyEvent e) {
 		if (!isKeyPressed) {
 			isKeyPressed = true;
