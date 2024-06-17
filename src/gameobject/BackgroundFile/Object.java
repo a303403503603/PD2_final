@@ -44,6 +44,18 @@ public class Object {
 		return type;
 	}
 
+    public int getX() {
+		return posX;
+	}
+
+    public int getWidth() {
+		return image.getWidth();
+	}
+
+    public int setX(int x) {
+		return posX = x;
+	}
+
     public boolean isAtX(int distanceFromLeftEnd) {
         if(posX < distanceFromLeftEnd && !positionChecked) {
             positionChecked = true;

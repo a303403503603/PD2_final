@@ -33,6 +33,7 @@ public class BackGroundManager {
 	private List<Object> objects;
 	private List<Object> listLand;
 	private MainCharacter mainCharacter;
+	static int once = 0;
 	
 	public BackGroundManager (MainCharacter mainCharacter, int width) {
 		rand = new Random();
@@ -66,6 +67,7 @@ public class BackGroundManager {
 	}
 
 	public void update() {
+		int landFirstX = 0;
 		for (int i = 0; i < objects.size(); i++) {
             Object e = objects.get(i);
             e.update();
@@ -77,6 +79,24 @@ public class BackGroundManager {
                 i--;
             }
         }
+		//Adjust Land
+		once = 0;
+		int previousPosX = 0;
+		for (int i = 0; i < objects.size(); i++) {
+			Object e = objects.get(i);
+			if(e.getType() == 3) {
+				if(once == 0) {
+					landFirstX = e.getX();
+					previousPosX = landFirstX;
+					once = 1;
+				}
+				else {
+					e.setX(previousPosX + e.getWidth());
+					previousPosX = e.getX();
+				}
+			}
+		}
+		once = 0;
 	}
 	
 	public void draw(Graphics g) {
