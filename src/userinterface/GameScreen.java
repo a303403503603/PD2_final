@@ -1,9 +1,9 @@
 package userinterface;
 
-import java.awt.AlphaComposite;
+//import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
+//import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -40,7 +40,6 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 
 	public GameScreen() {
 		mainCharacter = new MainCharacter();
-		mainCharacter.setSpeedX((float)2.5);
 		
 		backGroundManager = new BackGroundManager(mainCharacter, GameWindow.SCREEN_WIDTH);
 		enemiesManager = new EnemiesManager(mainCharacter);
@@ -117,16 +116,13 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 	@Override
 	public void run() {
 
-		int fps = 100;
+		int fps = 60;
 		long msPerFrame = 1000 * 1000000 / fps;
-		long lastTime = 0;
+		long lastTime = System.nanoTime(); 
 		long elapsed;
 		
 		int msSleep;
 		int nanoSleep;
-
-		//long endProcessGame;
-		//long lag = 0;
 
 		while (true) {
 			gameUpdate();

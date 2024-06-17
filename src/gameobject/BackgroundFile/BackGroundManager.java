@@ -14,8 +14,8 @@ public class BackGroundManager {
 	public static final int LAND_POSY = 110;
 
 	
-	private BufferedImage light1;
-	private BufferedImage light2;
+	//private BufferedImage light1;
+	//private BufferedImage light2;
 	private BufferedImage painting1;
 	private BufferedImage painting2;	
 	private BufferedImage painting3;	
@@ -23,7 +23,7 @@ public class BackGroundManager {
 	private BufferedImage land2;
 	private BufferedImage land3;
 
-	private List<BufferedImage> lightImageList;
+	//private List<BufferedImage> lightImageList;
 	private List<BufferedImage> paintingImageList;
 	private List<BufferedImage> landImageList;
 	
@@ -36,9 +36,9 @@ public class BackGroundManager {
 	
 	public BackGroundManager (MainCharacter mainCharacter, int width) {
 		rand = new Random();
-		light1 = Resource.getResouceImage("data/light1.png");
-		light2 = Resource.getResouceImage("data/light2.png");
-		lightImageList = Arrays.asList(light1, light2);
+		//light1 = Resource.getResouceImage("data/light1.png");
+		//light2 = Resource.getResouceImage("data/light2.png");
+		//lightImageList = Arrays.asList(light1, light2);
 
 		painting1 = Resource.getResouceImage("data/painting1.png");
 		painting2 = Resource.getResouceImage("data/painting2.png");
@@ -54,7 +54,7 @@ public class BackGroundManager {
 		listLand = new ArrayList<Object>();
 		this.mainCharacter = mainCharacter;
 		
-		objects.add(new Object(mainCharacter, rand.nextInt(400), 40, getRandomImage(lightImageList, rand), 1));
+		//objects.add(new Object(mainCharacter, rand.nextInt(400), 40, getRandomImage(lightImageList, rand), 1));
 		objects.add(new Object(mainCharacter, rand.nextInt(200), 150, getRandomImage(paintingImageList, rand), 2));
 		
 		numberOfImageLand = width / land1.getWidth() + 2;
@@ -83,16 +83,16 @@ public class BackGroundManager {
 		for(Object e : objects) {
 			e.draw(g);
 		}
-		for(Object land : listLand) {
-			land.draw(g);
-		}
+		//for(Object land : listLand) {
+		//	land.draw(g);
+		//  }
 	}
 	
 	public Object createObject(int type) {
-		if(type == 1) {
-			return new Object(mainCharacter, 600 + rand.nextInt(300), 40, getRandomImage(lightImageList, rand), 1);
-		}
-		else if(type == 2) {
+		//if(type == 1) {
+		//	return new Object(mainCharacter, 600 + rand.nextInt(300), 40, getRandomImage(lightImageList, rand), 1);
+		//}
+		if(type == 2) {
 			return new Object(mainCharacter, 600 + rand.nextInt(200), 150, getRandomImage(paintingImageList, rand), 2);
 		}
 		else {

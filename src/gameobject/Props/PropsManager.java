@@ -58,12 +58,16 @@ public class PropsManager {
 	}
 	
 	public Friend createFriend() {
-		int type = rand.nextInt(10);
+		int batteryLevel = mainCharacter.getBatteryLevel();
+		int life = mainCharacter.getLife();
+		int type = rand.nextInt(100);
+		int regenRatio = (life <= 1)? 45 : 35;
+		int lightRatio = (batteryLevel > 10) ? 55 : 65;
 
-		if(type < 5) {
+		if(type < regenRatio) {
 			return new Flower(mainCharacter, 650, friendRegen.getWidth() - 10, friendRegen.getHeight() - 10, friendRegen, 1);
 		}
-		else if(type > 6){
+		else if(type > lightRatio){
 			return new Flower(mainCharacter, 650, friendLight.getWidth() - 10, friendLight.getHeight() - 10, friendLight, 2);
 		}
 		else{	

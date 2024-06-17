@@ -20,15 +20,17 @@ public class MainCharacter {
     // 不同狀態的常數
     private static final int NORMAL_RUN = 0;
     private static final int JUMPING = 1;
-    private static final int DOWN_RUN = 2;
+    private static final int DOWN_RUN = 2; 
     private static final int DEATH = 3;
-    public static final int MAX_BATTERY = 15;
+    public static final int MAX_BATTERY = 1;
+    public static final int MIN_BATTERY = 15;
+
 
     private static final int SCORE_INCREMENT = 10;
     private static final int TIME_INTERVAL = 1000; // 每秒增加分數
     private static final int BRIGHTNESS_INCREMENT = 0;
     private static final int BRIGHTNESS_DECREMENT = 15; // 每次遞減的亮度
-    private static final int DECREMENT_INTERVAL = 2000; // 每 15 秒
+    private static final int DECREMENT_INTERVAL = 1000; // 每 15 秒
     private static final int MAX_GRAVITY_TIME = 5000;
     private static final int MAX_LIFE = 3;
 
@@ -81,6 +83,7 @@ public class MainCharacter {
         batteryLevel = MAX_BATTERY;
         gravityStatus = false;
         gravityMode = "Earth";
+        setSpeedX(5);
 
         startTime = System.currentTimeMillis();
         lastBrightnessDecrementTime = startTime;
@@ -93,8 +96,8 @@ public class MainCharacter {
         state = NORMAL_RUN;
 
         rectBound = new Rectangle();
-        normalRunAnim = new Animation(90);
-        downRunAnim = new Animation(90);
+        normalRunAnim = new Animation(60);
+        downRunAnim = new Animation(60);
         
         try {
             normalRunAnim.addFrame(Resource.getResouceImage("data/main-character1.png"));
@@ -120,12 +123,12 @@ public class MainCharacter {
         return speedX;
     }
 
-    public void setSpeedX(float speedX) {
+    public void setSpeedX(int speedX) {
         this.speedX = speedX;
     }
 
     public void addSpeedX() {
-        speedX += 0.2;
+        speedX += 1;
     }
 
     //生命值部分
@@ -178,8 +181,8 @@ public class MainCharacter {
 
     private void updateBatteryLevel() {
         batteryLevel = (brightness / 15);
-        if (batteryLevel > MAX_BATTERY) {
-            batteryLevel = MAX_BATTERY;
+        if (batteryLevel > MIN_BATTERY) {
+            batteryLevel = MIN_BATTERY;
         }
         if (batteryLevel < 0) {
             batteryLevel = 0;
@@ -190,13 +193,13 @@ public class MainCharacter {
     //重力部分
     public void changeGravity() {
         gravityTime = System.currentTimeMillis();
-        setGravity(0.25f);
+        setGravity(0.225f);
         gravityStatus = true;
     }
 
     private void setGravity(float gravity) {
         this.gravity = gravity;
-        if(gravity == 0.25f) {
+        if(gravity == 0.225f) {
             gravityMode = "Moon";
         }
         else {
@@ -233,7 +236,6 @@ public class MainCharacter {
 
     // 更新主角狀態
     public void update() {
-        
         normalRunAnim.updateFrame();
         downRunAnim.updateFrame();
         if(posY >= LAND_POSY) {
@@ -251,7 +253,7 @@ public class MainCharacter {
         // 計算時間並增加分數
         if (currentTime - startTime >= TIME_INTERVAL) {
             score += SCORE_INCREMENT;
-            if(score != 0 && score % 100 == 0) {
+            if(score != 0 && score % 200 == 0) {
                 scoreUpSound.play();
                 addSpeedX();
             }
@@ -287,6 +289,8 @@ public class MainCharacter {
     
     public void down(boolean isDown) {
         if(state == JUMPING) {
+            speedY = (float)(gravity * 10);
+            posY += speedY;
             return;
         }
         if(isDown) {
@@ -330,7 +334,7 @@ public class MainCharacter {
         posY = LAND_POSY;
 
         gravity = 0.4f;
-        setSpeedX((float)2.5);
+        setSpeedX(5);
         brightness = BRIGHTNESS_INCREMENT;
         life = MAX_LIFE;
         batteryLevel = MAX_BATTERY;
@@ -355,7 +359,8 @@ public class MainCharacter {
         int batteryHeight = 10;
         int gap = 5;
         
-        for (int i = 0; i < MAX_BATTERY; i++) {
+        for (int i = 0; i < MIN_BATTERY; i++) {
+            
             if ((15 - batteryLevel) < i) {
                 g.setColor(Color.GRAY);
             } else {
