@@ -56,7 +56,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 		thread = new Thread(this);
 		thread.start();
 	}
-
+	//更新遊戲內容
 	public void gameUpdate() {
 		if (gameState == GAME_PLAYING_STATE) {
 			backGroundManager.update();
@@ -65,9 +65,9 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 			propsManager.update();
 
 			if (enemiesManager.isCollision()) {
-				if(mainCharacter.getLife() <= 1) {
-					mainCharacter.playDeadSound();
-					gameState = GAME_OVER_STATE;
+				if(mainCharacter.getLife() <= 1) {	//生命條數量不足
+					mainCharacter.playDeadSound();	   //播放死亡音效
+					gameState = GAME_OVER_STATE;	  //轉換遊戲模式
 					mainCharacter.dead(true);
 				}
 				else {
@@ -102,11 +102,12 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 		enemiesManager.draw(g);
 		propsManager.draw(g);//nora_0611+++
 		mainCharacter.draw(g);
+		//畫面做明暗度的調整
 		if (gameState == GAME_PLAYING_STATE) {
 			g.setColor(new Color(0, 0, 0, mainCharacter.getBrightness()));
 			g.fillRect(0, 0, getWidth(), getHeight());
 		}
-
+		
 		if (gameState == GAME_OVER_STATE) {
 			g.drawImage(gameOverButtonImage, 200, 30, null);
 			g.drawImage(replayButtonImage, 283, 50, null);
@@ -136,7 +137,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 				continue;
 			}
 			try {
-				Thread.sleep(msSleep, nanoSleep);
+				Thread.sleep(msSleep, nanoSleep);  //設定更新頻率
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
