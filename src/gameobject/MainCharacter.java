@@ -120,12 +120,12 @@ public class MainCharacter {
         return speedX;
     }
 
-    public void setSpeedX(float speedX) {
+    public void setSpeedX(int speedX) {
         this.speedX = speedX;
     }
 
     public void addSpeedX() {
-        speedX += 0.2;
+        speedX += 1;
     }
 
     //生命值部分
@@ -330,7 +330,7 @@ public class MainCharacter {
         posY = LAND_POSY;
 
         gravity = 0.4f;
-        setSpeedX((float)2.5);
+        setSpeedX((int)2);
         brightness = BRIGHTNESS_INCREMENT;
         life = MAX_LIFE;
         batteryLevel = MAX_BATTERY;
