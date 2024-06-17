@@ -4,30 +4,30 @@ import javax.swing.JFrame;
 
 public class GameWindow extends JFrame {
     
-    public static final int SCREEN_WIDTH = 600; // 窗口宽度
-    private GameScreen gameScreen; // 游戏屏幕对象
+    public static final int SCREEN_WIDTH = 600; // 窗口寬度
+    private GameScreen gameScreen; // 遊戲屏幕對象
     
-    // 构造函数
+    // 建構函數
     public GameWindow() {
-        super("Java T-Rex game"); // 调用父类构造函数，设置窗口标题
-        setSize(SCREEN_WIDTH, 175); // 设置窗口大小
-        setLocation(400, 200); // 设置窗口位置
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 设置窗口关闭操作
-        setResizable(false); // 设置窗口不可调整大小
+        super("Java T-Rex game"); // 調用父類建構函數，設置標題
+        setSize(SCREEN_WIDTH, 175); // 設置窗口大小
+        setLocation(400, 200); // 設置窗口位置
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 設置窗口關閉操作
+        setResizable(false); // 設置窗口不可調整大小
         
-        gameScreen = new GameScreen(); // 创建游戏屏幕对象
-        addKeyListener(gameScreen); // 给游戏屏幕添加键盘监听器
-        add(gameScreen); // 将游戏屏幕添加到窗口中
+        gameScreen = new GameScreen(); // 創建遊戲屏幕對象
+        addKeyListener(gameScreen); // 給遊戲屏幕添加鍵盤監聽器
+        add(gameScreen); // 將遊戲屏幕添加到窗口中
     }
     
-    // 启动游戏
+    // 啟動遊戲
     public void startGame() {
-        setVisible(true); // 设置窗口可见
-        gameScreen.startGame(); // 启动游戏屏幕
+        setVisible(true); // 設置窗口可見
+        gameScreen.startGame(); // 啟動遊戲屏幕
     }
     
-    // 主方法
+    // main function
     public static void main(String args[]) {
-        (new GameWindow()).startGame(); // 创建游戏窗口并启动游戏
+        (new GameWindow()).startGame(); // 創建遊戲窗口並啟動遊戲
     }
 }
