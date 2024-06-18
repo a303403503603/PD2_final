@@ -97,6 +97,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 		}
     }
 
+	//繪製遊戲畫面
 	public void paint(Graphics g) {
 		super.paintComponent(g);
 		backGroundManager.draw(g);
